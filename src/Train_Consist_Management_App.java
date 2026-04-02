@@ -1,50 +1,43 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-class Bogie {
-    private String name;
-    private int capacity;
+    class Bogie {
+        String name;
+        int capacity;
 
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    @Override
-    public String toString() {
-        return name + " Bogie → Capacity: " + capacity;
-    }
-}
-
-public class Train_Consist_Management_App {
-
-    public static void main(String[] args) {
-
-        List<Bogie> bogieList = new ArrayList<>();
-
-        bogieList.add(new Bogie("Sleeper", 72));
-        bogieList.add(new Bogie("AC Chair", 56));
-        bogieList.add(new Bogie("First Class", 40));
-
-        System.out.println("Before Sorting (Original Order):");
-        for (Bogie b : bogieList) {
-            System.out.println(b);
+        public Bogie(String name, int capacity) {
+            this.name = name;
+            this.capacity = capacity;
         }
 
-        bogieList.sort(Comparator.comparingInt(Bogie::getCapacity));
-
-        System.out.println("\nAfter Sorting (By Capacity - Ascending):");
-        for (Bogie b : bogieList) {
-            System.out.println(b);
+        @Override
+        public String toString() {
+            return name + " (" + capacity + ")";
         }
     }
-}
+
+    public class Train_Consist_Management_App {
+
+        public static void main(String[] args) {
+
+            System.out.println("=== Train Consist Management App: UC8 - Stream Filtering ===");
+
+            // Reusing bogies from UC7
+            List<Bogie> bogies = new ArrayList<>();
+            bogies.add(new Bogie("Sleeper", 72));
+            bogies.add(new Bogie("AC Chair", 56));
+            bogies.add(new Bogie("First Class", 48));
+            bogies.add(new Bogie("Executive AC", 80));
+
+            System.out.println("\nOriginal Bogie List:");
+            bogies.forEach(System.out::println);
+
+            // Filtering using Stream: capacity > 60
+            List<Bogie> filteredBogies = bogies.stream()
+                    .filter(b -> b.capacity > 60)
+                    .collect(Collectors.toList());
+
+            System.out.println("\nFiltered Bogies (Capacity > 60):");
+            filteredBogies.forEach(System.out::println);
+        }
+    }
