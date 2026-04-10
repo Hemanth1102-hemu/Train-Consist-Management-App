@@ -2,108 +2,55 @@ package Test;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import src.Bogie;
+import src.Train_Consist_Management_App;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-public class BogieReduceTest {
+public class RegexValidationTest {
 
     @Test
-    public void testReduce_TotalSeatCalculation() {
-        List<Bogie> bogies = Arrays.asList(
-                new Bogie("Sleeper", 72),
-                new Bogie("AC Chair", 56),
-                new Bogie("First Class", 48)
-        );
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(72 + 56 + 48, total);
+    public void testRegex_ValidTrainID() {
+        assertTrue(Train_Consist_Management_App.validateTrainID("TRN-1234"));
     }
 
     @Test
-    public void testReduce_MultipleBogiesAggregation() {
-        List<Bogie> bogies = Arrays.asList(
-                new Bogie("Sleeper", 72),
-                new Bogie("Sleeper", 72)
-        );
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(144, total);
+    public void testRegex_InvalidTrainIDFormat() {
+        assertFalse(Train_Consist_Management_App.validateTrainID("TRAIN12"));
+        assertFalse(Train_Consist_Management_App.validateTrainID("TRN12A"));
+        assertFalse(Train_Consist_Management_App.validateTrainID("1234-TRN"));
     }
 
     @Test
-    public void testReduce_SingleBogieCapacity() {
-        List<Bogie> bogies = Arrays.asList(
-                new Bogie("AC Chair", 56)
-        );
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(56, total);
+    public void testRegex_ValidCargoCode() {
+        assertTrue(Train_Consist_Management_App.validateCargoCode("PET-AB"));
     }
 
     @Test
-    public void testReduce_EmptyBogieList() {
-        List<Bogie> bogies = new ArrayList<>();
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(0, total);
+    public void testRegex_InvalidCargoCodeFormat() {
+        assertFalse(Train_Consist_Management_App.validateCargoCode("PET-ab"));
+        assertFalse(Train_Consist_Management_App.validateCargoCode("PET123"));
+        assertFalse(Train_Consist_Management_App.validateCargoCode("AB-PET"));
     }
 
     @Test
-    public void testReduce_CorrectCapacityExtraction() {
-        List<Bogie> bogies = Arrays.asList(
-                new Bogie("Sleeper", 72),
-                new Bogie("First Class", 48)
-        );
-
-        List<Integer> extracted = bogies.stream()
-                .map(Bogie::getCapacity)
-                .toList();
-
-        assertEquals(Arrays.asList(72, 48), extracted);
+    public void testRegex_TrainIDDigitLengthValidation() {
+        assertFalse(Train_Consist_Management_App.validateTrainID("TRN-123"));
+        assertFalse(Train_Consist_Management_App.validateTrainID("TRN-12345"));
     }
 
     @Test
-    public void testReduce_AllBogiesIncluded() {
-        List<Bogie> bogies = Arrays.asList(
-                new Bogie("Sleeper", 72),
-                new Bogie("AC Chair", 56),
-                new Bogie("First Class", 48)
-        );
-
-        int total = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(176, total);
+    public void testRegex_CargoCodeUppercaseValidation() {
+        assertFalse(Train_Consist_Management_App.validateCargoCode("PET-aa"));
+        assertFalse(Train_Consist_Management_App.validateCargoCode("PET-Ab"));
     }
 
     @Test
-    public void testReduce_OriginalListUnchanged() {
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
+    public void testRegex_EmptyInputHandling() {
+        assertFalse(Train_Consist_Management_App.validateTrainID(""));
+        assertFalse(Train_Consist_Management_App.validateCargoCode(""));
+    }
 
-        List<Bogie> copy = new ArrayList<>(bogies);
-
-        bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        assertEquals(copy.size(), bogies.size());
-        assertEquals(copy.get(0).getName(), bogies.get(0).getName());
+    @Test
+    public void testRegex_ExactPatternMatch() {
+        assertFalse(Train_Consist_Management_App.validateTrainID("TRN-1234XYZ"));
+        assertFalse(Train_Consist_Management_App.validateCargoCode("PET-AB12"));
     }
 }

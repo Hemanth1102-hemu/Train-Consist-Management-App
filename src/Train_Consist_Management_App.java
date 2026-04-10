@@ -1,52 +1,49 @@
 package src;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-class Bogie {
-    String name;
-    int capacity;
-
-    public Bogie(String name, int capacity) {
-        this.name = name;
-        this.capacity = capacity;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + capacity + ")";
-    }
-}
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Scanner;
 
 public class Train_Consist_Management_App {
 
+    // UC11: Validate Train ID
+    public static boolean validateTrainID(String trainID) {
+        String regex = "TRN-\\d{4}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(trainID);
+        return matcher.matches();
+    }
+
+    // UC11: Validate Cargo Code
+    public static boolean validateCargoCode(String cargoCode) {
+        String regex = "PET-[A-Z]{2}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(cargoCode);
+        return matcher.matches();
+    }
+
     public static void main(String[] args) {
 
-        System.out.println("=== UC10: Count Total Seats in Train (reduce) ===");
+        Scanner scanner = new Scanner(System.in);
 
-        // Step 1: Create list of bogies
-        List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 48));
-        bogies.add(new Bogie("Sleeper", 72));
+        System.out.print("Enter Train ID (Format: TRN-1234): ");
+        String trainID = scanner.nextLine();
 
-        // Step 2: Stream → map() → reduce()
-        int totalCapacity = bogies.stream()
-                .map(b -> b.getCapacity())
-                .reduce(0, Integer::sum);
+        if (validateTrainID(trainID)) {
+            System.out.println("Train ID is VALID.");
+        } else {
+            System.out.println("Train ID is INVALID.");
+        }
 
-        // Step 3: Display total
-        System.out.println("Total Seating Capacity: " + totalCapacity);
+        System.out.print("Enter Cargo Code (Format: PET-AB): ");
+        String cargoCode = scanner.nextLine();
 
-        System.out.println("==============================================");
+        if (validateCargoCode(cargoCode)) {
+            System.out.println("Cargo Code is VALID.");
+        } else {
+            System.out.println("Cargo Code is INVALID.");
+        }
+
+        scanner.close();
     }
 }
