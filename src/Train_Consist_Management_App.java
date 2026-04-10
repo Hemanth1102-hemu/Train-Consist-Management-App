@@ -32,7 +32,6 @@ public class Train_Consist_Management_App {
 
         System.out.println("=== UC9: Group Bogies by Type (Collectors.groupingBy) ===");
 
-        // Step 1: Reuse passenger bogies
         List<Bogie> bogies = new ArrayList<>();
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
@@ -40,11 +39,9 @@ public class Train_Consist_Management_App {
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
 
-        // Step 2: Apply groupingBy
         Map<String, List<Bogie>> groupedBogies = bogies.stream()
                 .collect(Collectors.groupingBy(Bogie::getName));
 
-        // Step 3: Display grouped bogies
         groupedBogies.forEach((type, list) -> {
             System.out.println(type + " → " + list);
         });
